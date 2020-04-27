@@ -6,6 +6,7 @@ import io.reactivex.disposables.CompositeDisposable
 import android.widget.Toast
 import android.media.MediaPlayer
 import android.os.Handler
+import android.view.View
 import com.cardinalblue.luyolung.audioplayer.R
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
@@ -67,16 +68,15 @@ class AudioPlayerActivity : AppCompatActivity() {
                 )
                 sBar.progress = sTime
                 hdlr.postDelayed(UpdateSongTime, 100)
-                btnPause.isEnabled = true
-                btnPlay.isEnabled = false
+                showPauseButton()
             }.addTo(disposableBag)
 
 
         RxView.clicks(btnPause)
             .subscribe {
                 mPlayer!!.pause()
-                btnPause.isEnabled = false
-                btnPlay.isEnabled = true
+                showPlayButton()
+
                 Toast.makeText(applicationContext, "Pausing Audio", Toast.LENGTH_SHORT).show()
             }.addTo(disposableBag)
 
@@ -134,4 +134,31 @@ class AudioPlayerActivity : AppCompatActivity() {
             hdlr.postDelayed(this, 100)
         }
     }
+
+    private fun showPlayButton() {
+        btnPlay.isEnabled = true
+        btnPlay.isVisible = true
+
+        btnPause.isEnabled = false
+        btnPause.isVisible = false
+    }
+
+    private fun showPauseButton() {
+        btnPlay.isEnabled = false
+        btnPlay.isVisible = false
+
+        btnPause.isEnabled = true
+        btnPause.isVisible = true
+    }
 }
+
+
+var View.isVisible: Boolean
+    set(value) {
+        visibility = if(value){
+            View.VISIBLE
+        }else{
+            View.GONE
+        }
+    }
+    get() = visibility == View.VISIBLE

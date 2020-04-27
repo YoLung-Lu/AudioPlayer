@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpUserAction() {
         RxView.clicks(audioPlayer)
-            .debounce(2, TimeUnit.SECONDS)
+            .throttleFirst(2, TimeUnit.SECONDS)
             .subscribe {
                 val intent = Intent(this, AudioPlayerActivity::class.java)
                 this.startActivity(intent)
