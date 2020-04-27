@@ -77,6 +77,11 @@ class AudioPlayerActivity : AppCompatActivity() {
                         "Cannot jump forward 5 seconds",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    mPlayer!!.reset()
+                    mPlayer!!.setDataSource(applicationContext, songList[currentSongIndex])
+                    mPlayer!!.prepare()
+                    mPlayer!!.start()
                 }
                 if (!btnPlay.isEnabled) {
                     btnPlay.isEnabled = true
@@ -95,6 +100,12 @@ class AudioPlayerActivity : AppCompatActivity() {
                         "Cannot jump backward 5 seconds",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    sTime = 0
+                    mPlayer!!.reset()
+                    mPlayer!!.setDataSource(applicationContext, songList[currentSongIndex])
+                    mPlayer!!.prepare()
+                    mPlayer!!.start()
                 }
                 if (!btnPlay.isEnabled) {
                     btnPlay.isEnabled = true

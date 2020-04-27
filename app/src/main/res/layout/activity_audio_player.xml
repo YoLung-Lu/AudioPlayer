@@ -55,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="450dp"
         android:src="@drawable/ic_launcher_foreground"
+        android:background="#CCCCCC"
         app:layout_constraintBottom_toTopOf="@+id/guidelineImageBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
