@@ -2,12 +2,38 @@ package com.cardinalblue.luyolung.audioplayer.db
 
 import android.provider.MediaStore
 import android.content.ContentResolver
+import android.net.Uri
 import com.cardinalblue.luyolung.audioplayer.model.Audio
 
 
-class AudioRepository(private val contentResolver: ContentResolver) {
+class AudioRepository(private val contentResolver: ContentResolver,
+                      defaultSongList: List<Uri>) {
 
     val audioList = mutableListOf<Audio>()
+
+    private var currentSongIndex = 0
+    private val builtInSongList = defaultSongList
+
+
+    fun getListLength() = builtInSongList.size
+
+    fun getCurrentSong() = builtInSongList[currentSongIndex]
+
+    fun toPreviousSong(): Uri {
+        if (currentSongIndex == 0) {
+            currentSongIndex = getListLength() - 1
+        } else {
+            currentSongIndex -= 1
+        }
+
+        return getCurrentSong()
+    }
+
+    fun toNextSong(): Uri {
+        currentSongIndex = (currentSongIndex + 1) % getListLength()
+
+        return getCurrentSong()
+    }
 
     fun loadAudio() {
 

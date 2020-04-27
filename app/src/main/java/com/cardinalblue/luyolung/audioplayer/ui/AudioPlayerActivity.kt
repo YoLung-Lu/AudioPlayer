@@ -18,12 +18,20 @@ import java.util.concurrent.TimeUnit
 // Basic audio player example from:
 // https://www.tutlane.com/tutorial/android/android-audio-media-player-with-examples
 
+
+// TODO:
+// 1. Separate UI and domain, stablize the model
+// 2. UI: Motion layout, able to set time by bar
+// 3. Model: Database, Load song and store
+// 4. Model: Customize song list
+// 5. Background service
+
 class AudioPlayerActivity : AppCompatActivity() {
 
     private val disposableBag = CompositeDisposable()
 
     private var mPlayer: MediaPlayer? = null
-    private var repository: AudioRepository? = null
+    private lateinit var repository: AudioRepository
 
     private var oTime = 0
     private var sTime = 0
@@ -33,7 +41,6 @@ class AudioPlayerActivity : AppCompatActivity() {
     private val hdlr = Handler()
 
     // Song list.
-    private val songList = getDefaultSongs()
     private var currentSongIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,23 +54,24 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         observeUserAction()
 
-        repository = AudioRepository(contentResolver)
-        repository!!.loadAudio()
+        repository = AudioRepository(contentResolver, getDefaultSongs())
+        repository.loadAudio()
     }
 
     private fun observeUserAction() {
         RxView.clicks(btnPlay)
             .subscribe {
+                Toast.makeText(this@AudioPlayerActivity, "Playing Audio", Toast.LENGTH_SHORT).show()
                 play()
             }.addTo(disposableBag)
 
 
         RxView.clicks(btnPause)
             .subscribe {
+                Toast.makeText(applicationContext, "Pausing Audio", Toast.LENGTH_SHORT).show()
                 mPlayer!!.pause()
                 showPlayButton()
 
-                Toast.makeText(applicationContext, "Pausing Audio", Toast.LENGTH_SHORT).show()
             }.addTo(disposableBag)
 
         RxView.clicks(btnForward)
@@ -79,7 +87,7 @@ class AudioPlayerActivity : AppCompatActivity() {
                     ).show()
 
                     mPlayer!!.reset()
-                    mPlayer!!.setDataSource(applicationContext, songList[currentSongIndex])
+                    mPlayer!!.setDataSource(applicationContext, repository.getCurrentSong())
                     mPlayer!!.prepare()
                     mPlayer!!.start()
                 }
@@ -103,7 +111,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
                     sTime = 0
                     mPlayer!!.reset()
-                    mPlayer!!.setDataSource(applicationContext, songList[currentSongIndex])
+                    mPlayer!!.setDataSource(applicationContext, repository.getCurrentSong())
                     mPlayer!!.prepare()
                     mPlayer!!.start()
                 }
@@ -114,21 +122,16 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         RxView.clicks(btnPrev)
             .subscribe {
-                oTime = 0
-                previousSong()
-                play()
+                playSong(repository.toPreviousSong())
             }.addTo(disposableBag)
 
         RxView.clicks(btnNext)
             .subscribe {
-                oTime = 0
-                nextSong()
-//                play()
+                playSong(repository.toNextSong())
             }.addTo(disposableBag)
     }
 
     private fun play() {
-        Toast.makeText(this@AudioPlayerActivity, "Playing Audio", Toast.LENGTH_SHORT).show()
         mPlayer!!.start()
         eTime = mPlayer!!.duration
         sTime = mPlayer!!.currentPosition
@@ -136,24 +139,9 @@ class AudioPlayerActivity : AppCompatActivity() {
             sBar.max = eTime
             oTime = 1
         }
-        txtSongTime!!.setText(
-            String.format(
-                "%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(eTime.toLong()),
-                TimeUnit.MILLISECONDS.toSeconds(eTime.toLong()) - TimeUnit.MINUTES.toSeconds(
-                    TimeUnit.MILLISECONDS.toMinutes(eTime.toLong())
-                )
-            )
-        )
-        txtStartTime!!.setText(
-            String.format(
-                "%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(sTime.toLong()),
-                TimeUnit.MILLISECONDS.toSeconds(sTime.toLong()) - TimeUnit.MINUTES.toSeconds(
-                    TimeUnit.MILLISECONDS.toMinutes(
-                        sTime.toLong()
-                    )
-                )
-            )
-        )
+        txtSongTime!!.text = getDisplayedTimeText(eTime)
+        txtStartTime!!.text = getDisplayedTimeText(sTime)
+
         sBar.progress = sTime
         hdlr.postDelayed(UpdateSongTime, 100)
         showPauseButton()
@@ -162,16 +150,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     private val UpdateSongTime = object : Runnable {
         override fun run() {
             sTime = mPlayer!!.currentPosition
-            txtStartTime!!.setText(
-                String.format(
-                    "%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(sTime.toLong()),
-                    TimeUnit.MILLISECONDS.toSeconds(sTime.toLong()) - TimeUnit.MINUTES.toSeconds(
-                        TimeUnit.MILLISECONDS.toMinutes(
-                            sTime.toLong()
-                        )
-                    )
-                )
-            )
+            txtStartTime!!.text = getDisplayedTimeText(sTime)
+
             sBar.progress = sTime
             hdlr.postDelayed(this, 100)
         }
@@ -193,33 +173,31 @@ class AudioPlayerActivity : AppCompatActivity() {
         btnPause.isVisible = true
     }
 
-    private fun previousSong() {
-        if (currentSongIndex == 0) {
-            currentSongIndex = songList.size - 1
-        } else {
-            currentSongIndex -= 1
-        }
+    private fun playSong(uri: Uri) {
+        // UI?
+        oTime = 0
 
         val player = mPlayer ?: return
         with(player) {
             reset()
-            setDataSource(applicationContext, songList[currentSongIndex])
+            setDataSource(applicationContext, uri)
             prepare()
             start()
         }
+
+        play()
     }
 
-    private fun nextSong() {
-        currentSongIndex = (currentSongIndex + 1) % songList.size
+    private fun getDisplayedTimeText(timeMillisecond: Int): String {
+        val second = timeMillisecond % 60000
 
-        val player = mPlayer ?: return
-        with(player) {
-            reset()
-            setDataSource(applicationContext, songList[currentSongIndex])
-            prepare()
-            start()
-        }
+        return String.format(
+            "%d min, %d sec",
+            TimeUnit.MILLISECONDS.toMinutes(timeMillisecond.toLong()),
+            TimeUnit.MILLISECONDS.toSeconds(second.toLong())
+        )
     }
+
 
     private fun getDefaultSongs(): List<Uri> {
 //        resources
