@@ -1,16 +1,16 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.cardinalblue.luyolung.audioplayer"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+//        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -19,6 +19,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    configurations.all {
+        resolutionStrategy.force "com.android.support:multidex:1.0.1"
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support' &&
+                    !details.requested.name.contains('multidex')) {
+                details.useVersion "28.0.0"
+            }
         }
     }
 }
@@ -32,4 +41,63 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+//    // Google Support Library.
+//    implementation rootProject.ext.dep.supportAppcompatV7
+//    implementation rootProject.ext.dep.supportCompat
+//    implementation rootProject.ext.dep.supportCardViewV7
+//    implementation rootProject.ext.dep.supportRecyclerViewV7
+//    implementation rootProject.ext.dep.supportDesign
+//    implementation rootProject.ext.dep.supportAnnotations
+//    implementation rootProject.ext.dep.supportVectorDrawable
+//    implementation rootProject.ext.dep.supportPercent
+//    implementation rootProject.ext.dep.supportPalette
+//    implementation rootProject.ext.dep.supportConstraintLayout
+//
+////    // Google Support MultiDex.
+////    implementation rootProject.ext.dep.supportMultidex
+//
+////    // Android Architecture Component
+////    implementation rootProject.ext.dep.aacLifecycleExt
+////    implementation rootProject.ext.dep.aacLifecycleViewModel
+////    // LiveData
+////    implementation rootProject.ext.dep.liveDataKtx
+//
+    // RxJava
+    implementation rootProject.ext.dep.rxJava
+    implementation rootProject.ext.dep.rxAndroid
+    implementation rootProject.ext.dep.rxBinding
+    implementation rootProject.ext.dep.rxKotlin
+//    implementation rootProject.ext.dep.rxPermissions
+//    implementation rootProject.ext.dep.rxRelay
+//    implementation rootProject.ext.dep.rxDogTag
+//    implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.1'
+//
+//    // Kotlin
+//    implementation rootProject.ext.dep.kotlinStdlib
+//    implementation rootProject.ext.dep.kotlinStdlibJdk7
+//    implementation rootProject.ext.dep.kotlinImmutableList
+//
+//    // Room
+//    implementation rootProject.ext.dep.roomPersistenceRuntime
+//    kapt rootProject.ext.dep.roomPersistenceCompiler
+//    implementation "org.jetbrains.anko:anko:0.10.4"
+//
+//    // Unit testing dependencies
+//    testImplementation rootProject.ext.dep.testJunit
+//    testImplementation rootProject.ext.dep.testMockito
+//    testImplementation rootProject.ext.dep.testRobolectric
+//    testImplementation rootProject.ext.dep.testRobolectricMultidex
+//    testImplementation rootProject.ext.dep.testAssertj
+//    testImplementation rootProject.ext.dep.testMockk
+//    testImplementation rootProject.ext.dep.testAssertj
+//    testImplementation rootProject.ext.dep.supportAnnotations
+//    testImplementation 'org.hamcrest:hamcrest-all:1.3'
+//
+//    // Instrumentation tests.
+//    androidTestImplementation rootProject.ext.dep.supportAnnotations
+//    androidTestImplementation rootProject.ext.dep.testEspressoCore
+//    androidTestImplementation rootProject.ext.dep.testMockito
+//    androidTestImplementation rootProject.ext.dep.testMockitoAndroid
+//    androidTestImplementation rootProject.ext.dep.testFindBugs
 }
