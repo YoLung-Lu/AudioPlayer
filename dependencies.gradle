@@ -27,6 +27,7 @@ ext {
             supportV4CoreUtils      : "androidx.legacy:legacy-support-core-utils:$ANDROID_X_VER",
             supportCompat           : "androidx.core:core:$ANDROID_X_VER",
             supportKtx              : "androidx.core:core-ktx:$ANDROID_X_VER",
+            supportMedia            : "androidx.media:media:$ANDROID_X_VER",
             supportAppcompatV7      : "androidx.appcompat:appcompat:$APPCOMPAT_VER",
             supportRecyclerViewV7   : "androidx.recyclerview:recyclerview:$ANDROID_X_VER",
             supportCardViewV7       : "androidx.cardview:cardview:$ANDROID_X_VER",

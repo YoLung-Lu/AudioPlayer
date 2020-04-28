@@ -43,8 +43,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
 //    // Google Support Library.
-//    implementation rootProject.ext.dep.supportAppcompatV7
-//    implementation rootProject.ext.dep.supportCompat
+    implementation rootProject.ext.dep.supportAppcompatV7
+    implementation rootProject.ext.dep.supportCompat
+    implementation rootProject.ext.dep.supportKtx
+    implementation rootProject.ext.dep.supportMedia
 //    implementation rootProject.ext.dep.supportCardViewV7
 //    implementation rootProject.ext.dep.supportRecyclerViewV7
 //    implementation rootProject.ext.dep.supportDesign

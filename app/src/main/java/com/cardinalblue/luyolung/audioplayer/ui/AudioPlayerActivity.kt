@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit
 
 // Basic audio player example from:
 // https://www.tutlane.com/tutorial/android/android-audio-media-player-with-examples
+// https://developer.android.com/guide/topics/media/mediaplayer
 
 
 // TODO:
@@ -31,6 +32,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private val disposableBag = CompositeDisposable()
 
     private var mPlayer: MediaPlayer? = null
+    private var player: MediaPlayer = MediaPlayer()
     private lateinit var repository: AudioRepository
 
     private var oTime = 0
