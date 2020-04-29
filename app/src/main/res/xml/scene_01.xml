@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetStart="@+id/start"
+        motion:constraintSetEnd="@+id/end"
+        motion:duration="1000">
+
+        <!--            motion:touchAnchorId="@+id/scroller"-->
+        <OnSwipe
+            motion:touchAnchorId="@+id/scroller"
+            motion:touchAnchorSide="top"
+            motion:dragDirection="dragUp" />
+
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/imgLogo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:rotation="0"
+            motion:layout_constraintDimensionRatio="1:1"
+            motion:layout_constraintBottom_toTopOf="@+id/guidelineImageBottom"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="@+id/guidelineImageTop">
+
+            <CustomAttribute
+                motion:attributeName="backgroundColor"
+                motion:customColorValue="#CCCCCC"/>
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/guidelineImageBottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:orientation="horizontal"
+            motion:layout_constraintGuide_percent="0.8"/>
+
+        <Constraint
+            android:id="@+id/txtVw1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Now Playing: "
+            android:rotation="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            motion:layout_constraintBottom_toTopOf="@+id/guidelineImageTop"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/firstRow">
+            <CustomAttribute
+                motion:attributeName="backgroundColor"
+                motion:customColorValue="#CCCC00"/>
+            <CustomAttribute
+                motion:attributeName="alpha"
+                motion:customFloatValue="1"/>
+        </Constraint>
+
+<!--        <Constraint-->
+<!--            android:id="@+id/firstColumn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            motion:layout_constraintHorizontal_weight="2"-->
+<!--            motion:layout_constraintBottom_toBottomOf="parent"-->
+<!--            motion:layout_constraintStart_toStartOf="parent"-->
+<!--            motion:layout_constraintEnd_toStartOf="@+id/secondColumn"-->
+<!--            motion:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--        <Constraint-->
+<!--            android:id="@+id/secondColumn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            motion:layout_constraintHorizontal_weight="1"-->
+<!--            motion:layout_constraintBottom_toBottomOf="parent"-->
+<!--            motion:layout_constraintStart_toEndOf="@+id/firstColumn"-->
+<!--            motion:layout_constraintEnd_toEndOf="parent"-->
+<!--            motion:layout_constraintTop_toTopOf="parent"/>-->
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/imgLogo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:rotation="-1080"
+            motion:layout_constraintDimensionRatio="1:1"
+            motion:layout_constraintBottom_toTopOf="@+id/guidelineTestMotion"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="@+id/guidelineImageTop">
+
+            <CustomAttribute
+                motion:attributeName="backgroundColor"
+                motion:customColorValue="#00CC00"/>
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/guidelineImageBottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:orientation="horizontal"
+            motion:layout_constraintGuide_percent="0.4"/>
+
+        <Constraint
+            android:id="@+id/txtVw1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Now Playing: "
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:rotation="-90"
+            motion:layout_constraintBottom_toTopOf="@+id/guidelineTestMotion"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/firstRow">
+            <CustomAttribute
+                motion:attributeName="backgroundColor"
+                motion:customColorValue="#AAAAAA"/>
+            <CustomAttribute
+                motion:attributeName="alpha"
+                motion:customFloatValue="0.4"/>
+        </Constraint>
+
+<!--        <Constraint-->
+<!--            android:id="@+id/firstColumn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            motion:layout_constraintBottom_toBottomOf="parent"-->
+<!--            motion:layout_constraintStart_toStartOf="parent"-->
+<!--            motion:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--        <Constraint-->
+<!--            android:id="@+id/secondColumn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            motion:layout_constraintBottom_toBottomOf="parent"-->
+<!--            motion:layout_constraintEnd_toEndOf="parent"-->
+<!--            motion:layout_constraintTop_toTopOf="parent"/>-->
+
+
+<!--        <Constraint-->
+<!--            android:id="@+id/firstColumn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            motion:layout_constraintBottom_toTopOf="@+id/secondColumn"-->
+<!--            motion:layout_constraintStart_toStartOf="parent"-->
+<!--            motion:layout_constraintEnd_toEndOf="parent"-->
+<!--            motion:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--        <Constraint-->
+<!--            android:id="@+id/secondColumn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            motion:layout_constraintBottom_toBottomOf="parent"-->
+<!--            motion:layout_constraintStart_toStartOf="parent"-->
+<!--            motion:layout_constraintEnd_toEndOf="parent"-->
+<!--            motion:layout_constraintTop_toBottomOf="@+id/firstColumn"/>-->
+    </ConstraintSet>
+
+</MotionScene>

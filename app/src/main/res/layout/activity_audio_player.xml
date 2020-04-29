@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    tools:showPaths="true"
     tools:context=".ui.AudioPlayerActivity">
+    <!--  app:layoutDescription="@xml/scene_01"  -->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineImageTop"
@@ -17,18 +20,18 @@
         app:layout_constraintGuide_percent="0.05"/>
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTestMotion"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4"/>
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineImageBottom"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.8"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineToolbarLayer"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.87"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtVw1"
@@ -64,96 +67,153 @@
 
 
     <!--  First row of tool bar  -->
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtStartTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/sBar"
-        android:text="0 min, 0 sec"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineToolbarLayer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineImageBottom" />
-
-    <SeekBar
-        android:id="@+id/sBar"
+    <!--  androidx.constraintlayout.motion.widget.MotionLayout  -->
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/firstRow"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnBackward"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineToolbarLayer"
-        app:layout_constraintEnd_toStartOf="@+id/txtSongTime"
-        app:layout_constraintStart_toEndOf="@+id/txtStartTime"
-        app:layout_constraintTop_toTopOf="@+id/guidelineImageBottom" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtSongTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 min, 0 sec "
-        app:layout_constraintBottom_toTopOf="@+id/guidelineToolbarLayer"
+        android:layout_height="0dp"
+        android:paddingTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/secondRow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineImageBottom" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineImageBottom">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/sBar"
+            android:text="0 min, 0 sec"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sBar"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <SeekBar
+            android:id="@+id/sBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txtSongTime"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/txtStartTime"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtSongTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 min, 0 sec "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/sBar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
     <!--  Second row of tool bar  -->
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/btnBackward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_media_rew"
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/secondRow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineToolbarLayer" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/btnPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_media_pause"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnForward"
-        app:layout_constraintStart_toEndOf="@+id/btnBackward"
-        app:layout_constraintTop_toTopOf="@+id/guidelineToolbarLayer" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/btnPlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_media_play"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnForward"
-        app:layout_constraintStart_toEndOf="@+id/btnBackward"
-        app:layout_constraintTop_toTopOf="@+id/guidelineToolbarLayer" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/btnForward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@+id/imageButton3"
-        android:src="@android:drawable/ic_media_ff"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnPrev"
-        app:layout_constraintTop_toTopOf="@+id/guidelineToolbarLayer" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/btnPrev"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_nav_arrow_left_n"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnNext"
-        app:layout_constraintTop_toTopOf="@+id/guidelineToolbarLayer" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/btnNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@+id/imageButton3"
-        android:src="@drawable/icon_nav_arrow_right_n"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineToolbarLayer" />
+        app:layout_constraintTop_toBottomOf="@+id/firstRow">
 
+
+        <!--  First column  -->
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/firstColumn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/secondColumn"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnBackward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_media_rew"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_media_pause"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnForward"
+                app:layout_constraintStart_toEndOf="@+id/btnBackward"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_media_play"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnForward"
+                app:layout_constraintStart_toEndOf="@+id/btnBackward"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnForward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@+id/imageButton3"
+                android:src="@android:drawable/ic_media_ff"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+        <!--  Second column  -->
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/secondColumn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/firstColumn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnPrev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_nav_arrow_left_n"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnNext"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@+id/imageButton3"
+                android:src="@drawable/icon_nav_arrow_right_n"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnPrev"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/scroller"
@@ -166,4 +226,4 @@
         app:layout_constraintRight_toRightOf="parent"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

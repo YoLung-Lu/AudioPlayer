@@ -77,7 +77,6 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun observeScroller() {
-
         RxView.touches(scroller) { motionEvent: MotionEvent ->
             val newHeight = (motionEvent.rawY - navigationBarHeight)
             val newPercent = newHeight / screenHeight
