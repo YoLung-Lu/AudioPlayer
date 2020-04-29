@@ -7,10 +7,15 @@ import android.widget.Toast
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import com.cardinalblue.luyolung.audioplayer.R
 import com.cardinalblue.luyolung.audioplayer.db.AudioRepository
+import com.cardinalblue.luyolung.audioplayer.util.getNavigationBarHeight
+import com.cardinalblue.luyolung.audioplayer.util.getScreenHeight
 import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.functions.Predicate
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_audio_player.*
 import java.util.concurrent.TimeUnit
@@ -42,12 +47,22 @@ class AudioPlayerActivity : AppCompatActivity() {
     private val bTime = 5000
     private val hdlr = Handler()
 
+    // Test scroller
+    private var direction = -1
+    private var percent = 0.8f
+    private val delta = 0.05f
+    private val minBound = 0.4
+    private val maxBound = 0.8
+    private var screenHeight = 0
+    private val navigationBarHeight by lazy { getNavigationBarHeight(windowManager) }
+
     // Song list.
     private var currentSongIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
+        screenHeight = getScreenHeight(windowManager)
 
         mPlayer = MediaPlayer.create(this, R.raw.mp3_example)
 
@@ -55,9 +70,25 @@ class AudioPlayerActivity : AppCompatActivity() {
         btnPause.isEnabled = false
 
         observeUserAction()
+        observeScroller()
 
         repository = AudioRepository(contentResolver, getDefaultSongs())
         repository.loadAudio()
+    }
+
+    private fun observeScroller() {
+
+        RxView.touches(scroller) { motionEvent: MotionEvent ->
+            val newHeight = (motionEvent.rawY - navigationBarHeight)
+            val newPercent = newHeight / screenHeight
+
+            when (motionEvent.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    guidelineImageBottom.setGuidelinePercent(newPercent)
+                }
+            }
+            true
+        }.subscribe().addTo(disposableBag)
     }
 
     private fun observeUserAction() {

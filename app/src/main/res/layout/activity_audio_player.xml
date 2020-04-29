@@ -52,8 +52,9 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgLogo"
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
         android:src="@drawable/ic_launcher_foreground"
         android:background="#CCCCCC"
         app:layout_constraintBottom_toTopOf="@+id/guidelineImageBottom"
@@ -152,5 +153,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineToolbarLayer" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/scroller"
+        android:layout_width="150dp"
+        android:layout_height="15dp"
+        android:background="#CCFFFF"
+        app:layout_constraintTop_toTopOf="@+id/guidelineImageBottom"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineImageBottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
