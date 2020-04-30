@@ -7,11 +7,14 @@ import android.widget.Toast
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.cardinalblue.luyolung.audioplayer.R
 import com.cardinalblue.luyolung.audioplayer.db.AudioRepository
 import com.cardinalblue.luyolung.audioplayer.model.MyAudio
+import com.cardinalblue.luyolung.audioplayer.util.MyRxSeekBar
+import com.cardinalblue.luyolung.audioplayer.util.SeekBarEvent
 import com.cardinalblue.luyolung.audioplayer.util.getNavigationBarHeight
 import com.cardinalblue.luyolung.audioplayer.util.getScreenHeight
 import com.jakewharton.rxbinding2.view.RxView
@@ -25,9 +28,9 @@ import java.util.concurrent.TimeUnit
 
 
 // TODO:
-// 1. Separate UI and domain, stablize the model
-// 2. UI: Motion layout, able to set time by bar
-// 3. Model: Database, Load song and store
+// 1. (Part) Separate UI and domain, stablize the model
+// 2. (Done) UI: Motion layout, able to set time by bar
+// 3. (Part) Model: Database, Load song and store
 // 4. Model: Customize song list
 // 5. Background service
 
@@ -65,7 +68,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         mPlayer = MediaPlayer.create(this, R.raw.mp3_example)
 
-        sBar.isClickable = false
         btnPause.isEnabled = false
 
         observeUserAction()
@@ -95,6 +97,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun observeUserAction() {
+        observeSeekBar()
+
         RxView.clicks(btnPlay)
             .subscribe {
                 Toast.makeText(this@AudioPlayerActivity, "Playing Audio", Toast.LENGTH_SHORT).show()
@@ -173,19 +177,47 @@ class AudioPlayerActivity : AppCompatActivity() {
             }.addTo(disposableBag)
     }
 
+    private fun observeSeekBar() {
+        val seekBarTouched = MyRxSeekBar.onSeekBarEvent(seekBar).share()
+        // Updatable seekbar.
+        seekBarTouched
+            .subscribe { seekBarEvent ->
+                when(seekBarEvent) {
+                    is SeekBarEvent.Start -> {
+                        hdlr.removeCallbacks(UpdateSongTime)
+                    }
+                    is SeekBarEvent.End -> {
+                        mPlayer?.seekTo(sTime)
+                        hdlr.postDelayed(UpdateSongTime, 100)
+                    }
+                    is SeekBarEvent.ProgressChanged -> {
+                        sTime = seekBarEvent.progress
+                    }
+                }
+            }.addTo(disposableBag)
+
+        // Update current time.
+        seekBarTouched.ofType(SeekBarEvent.ProgressChanged::class.java)
+            .filter { it.fromUser }
+            .throttleFirst(100, TimeUnit.MILLISECONDS)
+            .subscribe {
+                txtStartTime!!.text = getDisplayedTimeText(sTime)
+            }.addTo(disposableBag)
+    }
+
     private fun play() {
         mPlayer!!.start()
         eTime = mPlayer!!.duration
         sTime = mPlayer!!.currentPosition
         if (oTime == 0) {
-            sBar.max = eTime
+            seekBar.max = eTime
             oTime = 1
         }
 
         txtSongTime!!.text = getDisplayedTimeText(eTime)
         txtStartTime!!.text = getDisplayedTimeText(sTime)
 
-        sBar.progress = sTime
+        seekBar.progress = sTime
         hdlr.postDelayed(UpdateSongTime, 100)
         showPauseButton()
     }
@@ -195,7 +227,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             sTime = mPlayer!!.currentPosition
             txtStartTime!!.text = getDisplayedTimeText(sTime)
 
-            sBar.progress = sTime
+            seekBar.progress = sTime
             hdlr.postDelayed(this, 100)
         }
     }
@@ -216,11 +248,10 @@ class AudioPlayerActivity : AppCompatActivity() {
         btnPause.isVisible = true
     }
 
-    private fun playSong(audio: MyAudio) {
+    private fun playSong(song: MyAudio) {
         // UI?
         oTime = 0
 
-        val song = repository.getCurrentSong()
         txtSname.text = song.title
 
         val player = mPlayer ?: return
@@ -246,17 +277,11 @@ class AudioPlayerActivity : AppCompatActivity() {
 
 
     private fun getDefaultSongs(): List<MyAudio> {
-//        resources
         val path = "android.resource://com.cardinalblue.luyolung.audioplayer/"
         val list = mutableListOf<MyAudio>()
         list.add(uriToAudio(Uri.parse(path + R.raw.mp3_example)))
         list.add(uriToAudio(Uri.parse(path + R.raw.mp3_example2)))
         list.add(uriToAudio(Uri.parse(path + R.raw.mp3_example3)))
-
-//        val list = mutableListOf<String>()
-//        list.add(path + R.raw.mp3_example)
-//        list.add(path + R.raw.mp3_example2)
-//        list.add(path + R.raw.mp3_example3)
         return list
     }
 
