@@ -7,15 +7,14 @@ import android.widget.Toast
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.cardinalblue.luyolung.audioplayer.R
 import com.cardinalblue.luyolung.audioplayer.db.AudioRepository
+import com.cardinalblue.luyolung.audioplayer.model.MyAudio
 import com.cardinalblue.luyolung.audioplayer.util.getNavigationBarHeight
 import com.cardinalblue.luyolung.audioplayer.util.getScreenHeight
 import com.jakewharton.rxbinding2.view.RxView
-import io.reactivex.functions.Predicate
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_audio_player.*
 import java.util.concurrent.TimeUnit
@@ -76,6 +75,11 @@ class AudioPlayerActivity : AppCompatActivity() {
         repository.loadAudio()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposableBag.clear()
+    }
+
     private fun observeScroller() {
         RxView.touches(scroller) { motionEvent: MotionEvent ->
             val newHeight = (motionEvent.rawY - navigationBarHeight)
@@ -118,8 +122,11 @@ class AudioPlayerActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
+                    val song = repository.getCurrentSong()
+                    txtSname.text = song.title
+
                     mPlayer!!.reset()
-                    mPlayer!!.setDataSource(applicationContext, repository.getCurrentSong())
+                    mPlayer!!.setDataSource(applicationContext, song.uri)
                     mPlayer!!.prepare()
                     mPlayer!!.start()
                 }
@@ -141,9 +148,12 @@ class AudioPlayerActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
+                    val song = repository.getCurrentSong()
+                    txtSname.text = song.title
+
                     sTime = 0
                     mPlayer!!.reset()
-                    mPlayer!!.setDataSource(applicationContext, repository.getCurrentSong())
+                    mPlayer!!.setDataSource(applicationContext, song.uri)
                     mPlayer!!.prepare()
                     mPlayer!!.start()
                 }
@@ -171,6 +181,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             sBar.max = eTime
             oTime = 1
         }
+
         txtSongTime!!.text = getDisplayedTimeText(eTime)
         txtStartTime!!.text = getDisplayedTimeText(sTime)
 
@@ -205,14 +216,17 @@ class AudioPlayerActivity : AppCompatActivity() {
         btnPause.isVisible = true
     }
 
-    private fun playSong(uri: Uri) {
+    private fun playSong(audio: MyAudio) {
         // UI?
         oTime = 0
+
+        val song = repository.getCurrentSong()
+        txtSname.text = song.title
 
         val player = mPlayer ?: return
         with(player) {
             reset()
-            setDataSource(applicationContext, uri)
+            setDataSource(applicationContext, song.uri)
             prepare()
             start()
         }
@@ -231,13 +245,13 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
 
-    private fun getDefaultSongs(): List<Uri> {
+    private fun getDefaultSongs(): List<MyAudio> {
 //        resources
         val path = "android.resource://com.cardinalblue.luyolung.audioplayer/"
-        val list = mutableListOf<Uri>()
-        list.add(Uri.parse(path + R.raw.mp3_example))
-        list.add(Uri.parse(path + R.raw.mp3_example2))
-        list.add(Uri.parse(path + R.raw.mp3_example3))
+        val list = mutableListOf<MyAudio>()
+        list.add(uriToAudio(Uri.parse(path + R.raw.mp3_example)))
+        list.add(uriToAudio(Uri.parse(path + R.raw.mp3_example2)))
+        list.add(uriToAudio(Uri.parse(path + R.raw.mp3_example3)))
 
 //        val list = mutableListOf<String>()
 //        list.add(path + R.raw.mp3_example)
@@ -245,6 +259,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 //        list.add(path + R.raw.mp3_example3)
         return list
     }
+
+    private fun uriToAudio(uri: Uri) = MyAudio(uri, "data", "title", "album", "artist")
 }
 
 var View.isVisible: Boolean

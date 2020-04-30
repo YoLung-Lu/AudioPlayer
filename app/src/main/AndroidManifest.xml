@@ -25,6 +25,7 @@
         </activity>
 
         <activity android:name=".ui.AudioPlayerActivity"/>
+        <activity android:name=".ui.FileManagerActivity"/>
 
 
         <service android:name=".ui.MediaPlaybackService">

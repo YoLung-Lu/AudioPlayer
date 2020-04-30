@@ -25,14 +25,14 @@
             android:id="@+id/audioPlayer"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:padding="10dp"
+            android:padding="40dp"
             android:text="Function: Player"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/favorateList"
-            android:padding="10dp"
+            android:id="@+id/fileManager"
+            android:padding="40dp"
             android:text="Function: Build list"/>
 
     </LinearLayout>
