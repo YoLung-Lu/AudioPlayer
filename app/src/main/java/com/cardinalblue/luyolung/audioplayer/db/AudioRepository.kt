@@ -13,21 +13,17 @@ class AudioRepository(private val contentResolver: ContentResolver,
                       defaultSongList: List<MyAudio> = listOf()) {
 
     val audioList = mutableListOf<MyAudio>()
-
     private var currentSongIndex = 0
-    private val builtInSongList = defaultSongList
 
     init {
-        audioList.addAll(builtInSongList)
+        audioList.addAll(defaultSongList)
     }
-
-    fun getListLength() = audioList.size
 
     fun getCurrentSong() = audioList[currentSongIndex]
 
     fun toPreviousSong(): MyAudio {
         if (currentSongIndex == 0) {
-            currentSongIndex = getListLength() - 1
+            currentSongIndex = audioList.size - 1
         } else {
             currentSongIndex -= 1
         }
@@ -36,7 +32,7 @@ class AudioRepository(private val contentResolver: ContentResolver,
     }
 
     fun toNextSong(): MyAudio {
-        currentSongIndex = (currentSongIndex + 1) % getListLength()
+        currentSongIndex = (currentSongIndex + 1) % audioList.size
 
         return getCurrentSong()
     }
@@ -57,15 +53,12 @@ class AudioRepository(private val contentResolver: ContentResolver,
             }
         }
         cursor!!.close()
-
-//        loadAudio2()
     }
 
     private fun audioFromCursor(cursor: Cursor?): MyAudio? {
         if (cursor == null) return null
 
-        val name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME))
-        Log.d("Audio", name)
+//        val name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME))
 
         try {
             val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
@@ -79,23 +72,5 @@ class AudioRepository(private val contentResolver: ContentResolver,
             return MyAudio(contentUri, data, title, album, artist)
         } catch (e: Throwable) {}
         return null
-    }
-
-    fun loadAudio2() {
-        // TODO: IS_PODCAST
-
-        val uri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI
-        val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
-        val sortOrder = MediaStore.Audio.Media.TITLE + " ASC"
-        val cursor = contentResolver.query(uri, null, null, null, null)
-
-        if (cursor != null && cursor.count > 0) {
-            while (cursor.moveToNext()) {
-                audioFromCursor(cursor)?.let {
-                    audioList.add(it)
-                }
-            }
-        }
-        cursor!!.close()
     }
 }

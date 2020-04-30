@@ -55,7 +55,7 @@ class ItemListFragment: Fragment() {
     }
 
     private fun loadData(): List<MyAudio> {
-        val data = mutableListOf<MyAudio>(
+        val data = mutableListOf(
             MyAudio(Uri.EMPTY, "data", "title", "album", "artist"),
             MyAudio(Uri.EMPTY, "data2", "title2", "album2", "artist2")
         )

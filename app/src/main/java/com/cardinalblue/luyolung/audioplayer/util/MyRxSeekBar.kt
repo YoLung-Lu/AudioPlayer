@@ -23,7 +23,10 @@ class MyRxSeekBar {
             }
 
             view.setOnSeekBarChangeListener(listener)
-            return subject
+
+            return subject.doOnDispose {
+                view.setOnSeekBarChangeListener(null)
+            }
         }
     }
 }
