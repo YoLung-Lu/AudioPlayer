@@ -39,11 +39,13 @@ class AudioRepository(private val contentResolver: ContentResolver,
 
     fun loadAudio() {
 
-        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val uri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI
+//        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
 //        val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0 OR " + MediaStore.Audio.Media.IS_NOTIFICATION + "!= 0 OR " + MediaStore.Audio.Media.IS_RINGTONE + "!= 0"
         val sortOrder = MediaStore.Audio.Media.TITLE + " ASC"
         val cursor = contentResolver.query(uri, null, selection, null, sortOrder)
+//        val cursor = contentResolver.query(uri, null, null, null, sortOrder)
 
         if (cursor != null && cursor.count > 0) {
             while (cursor.moveToNext()) {

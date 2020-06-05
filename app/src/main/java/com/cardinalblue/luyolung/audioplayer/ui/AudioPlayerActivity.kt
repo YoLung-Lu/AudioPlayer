@@ -21,6 +21,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_audio_player.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
+import kotlin.math.min
 
 // Basic audio player example from:
 // https://www.tutlane.com/tutorial/android/android-audio-media-player-with-examples
@@ -53,8 +55,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var direction = -1
     private var percent = 0.8f
     private val delta = 0.05f
-    private val minBound = 0.4
-    private val maxBound = 0.8
+    private val minBound = 0.3f
+    private val maxBound = 0.78f
     private var screenHeight = 0
     private val navigationBarHeight by lazy { getNavigationBarHeight(windowManager) }
 
@@ -89,7 +91,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
             when (motionEvent.action) {
                 MotionEvent.ACTION_MOVE -> {
-                    guidelineImageBottom.setGuidelinePercent(newPercent)
+                    guidelineImageBottom.setGuidelinePercent(min(max(newPercent, minBound), maxBound))
                 }
             }
             true

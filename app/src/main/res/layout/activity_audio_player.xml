@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    app:layoutDescription="@xml/scene_01"
     tools:showPaths="true"
     tools:context=".ui.AudioPlayerActivity">
     <!--  app:layoutDescription="@xml/scene_01"  -->

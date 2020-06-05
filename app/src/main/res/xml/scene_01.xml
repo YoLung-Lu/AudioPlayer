@@ -54,7 +54,7 @@
             android:id="@+id/firstRow">
             <CustomAttribute
                 motion:attributeName="backgroundColor"
-                motion:customColorValue="#CCCC00"/>
+                motion:customColorValue="#CCCCFF"/>
             <CustomAttribute
                 motion:attributeName="alpha"
                 motion:customFloatValue="1"/>
